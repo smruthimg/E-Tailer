@@ -1,3 +1,5 @@
+//This file has all the functions that are used to query the database
+
 <?php
  include ("Classes/Product.class.php");
  include ("Classes/User.class.php");
