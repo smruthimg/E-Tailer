@@ -1,14 +1,23 @@
 <?php
-
+session_name("sg1626");//name of the cookie
 	
-	require_once("DB.class.php");
+session_start();
+require_once("DB.class.php");
+include('LoginBar.php');
 include('main.html');
-	$db=new DB();
-
-
-  // $db->getAllCartAsTableClass();
+$db=new DB();
+if(isset($_SESSION['UserID'])){
+$userid=$_SESSION['UserID'];
+}else{
+$userid=null;
+}
+//is postback?
    if(isset($_POST['UserId'])&& ($_POST['EmptyCart']=='Empty Cart') ){
-
+   	if(empty($_SESSION['loggedIn']) && $userid==null ){
+		header("Location:Login.php",302);
+		exit;
+	}
+//empty cart
  $db->deleteCart($_POST['UserId']);
 
  }
@@ -60,12 +69,12 @@ include('main.html');
 										</header>
 										<div>
                        
-                       <div><?php echo $db->getAllCartAsTableClass(); ?></div>			
+                       <div><?php echo $db->getAllCartAsTableClass($userid); ?></div>			
                        <footer>
                        <form action='cart.php' method='post'>
-                       <div><h1>Total: <?php echo $db->getSumCart(1); ?></h1></div>	
+                       <div><h1>Total: <?php echo $db->getSumCart($userid); ?></h1></div>	
                        <input type='submit' name='EmptyCart' value='Empty Cart'>
-                       <input type='hidden' name='UserId' value=1>
+                       <input type='hidden' name='UserId' value="<?php echo $userid ?>">
                        
                        </form >
                        
